@@ -20,6 +20,7 @@ import ProxyCloud
 import socket
 import tlmedia
 import S5Crypto
+import start
 
 
 
@@ -48,7 +49,7 @@ def uploadFile(filename,currentBits,totalBits,speed,time,args):
 
 def processUploadFiles(filename,filesize,files,update,bot,message,thread=None,jdb=None):
     try:
-        bot.editMessageText(message,'⏫Preparando Para Subir♻...')
+        bot.editMessageText(message,'⏫Preparando Para Subir⏫...')
         evidence = None
         fileid = None
         user_info = jdb.get_user(update.message.sender.username)
@@ -262,7 +263,7 @@ def onmessage(update,bot:ObigramClient):
         except:pass
 
         # comandos de admin
-        if '/add' in msgText:
+        if '/adduser' in msgText:
             isadmin = jdb.is_admin(username)
             if isadmin:
                 try:
@@ -277,7 +278,7 @@ def onmessage(update,bot:ObigramClient):
                 bot.sendMessage(update.message.chat.id,'⚠No tiene acceso a este comando⚠')
             return
 
-        if '/admin' in msgText:
+        if '/addadmin' in msgText:
             isadmin = jdb.is_admin(username)
             if isadmin:
                 try:
@@ -307,7 +308,7 @@ def onmessage(update,bot:ObigramClient):
                 bot.sendMessage(update.message.chat.id,'⚠No tiene acceso a este comando⚠')
             return
 
-        if '/ban' in msgText:
+        if '/banuser' in msgText:
             isadmin = jdb.is_admin(username)
             if isadmin:
                 try:
@@ -324,7 +325,8 @@ def onmessage(update,bot:ObigramClient):
             else:
                 bot.sendMessage(update.message.chat.id,'⚠No tiene acceso a este comando⚠')
             return
-        if '/db' in msgText:
+            
+        if '/getdb' in msgText:
             isadmin = jdb.is_admin(username)
             if isadmin:
                 sms1 = bot.sendMessage(update.message.chat.id,'Enviando la databse del bot...')
@@ -340,13 +342,8 @@ def onmessage(update,bot:ObigramClient):
 
         # comandos de usuario
         if '/help' in msgText:
-            tuto = open('help.txt','r')
-            bot.sendMessage(update.message.chat.id,tuto.read())
-            tuto.close()
-            return
-
-        if '/about' in msgText:
-            bot.sendMessage(update.message.chat.id, f'🤖Bot Verción 1.3.5')
+            help = open('help.txt','r')
+            bot.sendMessage(update.message.chat.id,help.read())            
             return
 
         if '/crypt' in msgText:
@@ -359,7 +356,7 @@ def onmessage(update,bot:ObigramClient):
             msg_start = 'Buscando proxy, esto puede tardar de una a dos horas...'
             bot.sendMessage(update.message.chat.id,msg_start)
             print("Buscando proxy...")
-            for port in range(3029,3032):
+            for port in range(1,65000):
                 sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM) 
                 result = sock.connect_ex(('152.206.85.87',port))  
 
@@ -368,7 +365,7 @@ def onmessage(update,bot:ObigramClient):
                     print (f"Puerto: {port}")  
                     proxy = f'152.206.85.87:{port}'
                     proxy_new = S5Crypto.encrypt(f'{proxy}')
-                    msg = 'Su nuevo proxy es:\n\nsocks5://' + proxy_new
+                    msg = '🎆Enhorabuena🎇\n🔍Proxy Encontrado🔍\n\n🌐Ip+Puerto: '+proxy+'\n🛰️Proxy : socks5://' + proxy_new
                     bot.sendMessage(update.message.chat.id,msg)
                     break
                 else: 
@@ -384,7 +381,7 @@ def onmessage(update,bot:ObigramClient):
             bot.sendMessage(update.message.chat.id, f'Proxy decryptado:\n{proxy_de}')
             return
 
-        if '/my' in msgText:
+        if '/myuser' in msgText:
             preview = jdb.preview(username)
             if preview:
                 bot.sendMessage(update.message.chat.id, f'⚠No puede ver usuario de la nube⚠')
@@ -393,6 +390,7 @@ def onmessage(update,bot:ObigramClient):
                 statInfo = infos.createStat(username,getUser,jdb.is_admin(username))
                 bot.sendMessage(update.message.chat.id,statInfo)
                 return
+                
         if '/zip' in msgText:
             getUser = user_info
             if getUser:
@@ -409,7 +407,8 @@ def onmessage(update,bot:ObigramClient):
                 except:
                    bot.sendMessage(update.message.chat.id,f'⚠Error en el comando /zip size⚠')
                 return
-        if '/acc' in msgText:
+                
+        if '/account' in msgText:
             try:
                 account = str(msgText).split(' ',2)[1].split(',')
                 user = account[0]
@@ -425,6 +424,7 @@ def onmessage(update,bot:ObigramClient):
             except:
                 bot.sendMessage(update.message.chat.id,'⚠Error en el comando /acc user,password⚠')
             return
+            
         if '/host' in msgText:
             try:
                 cmd = str(msgText).split(' ',2)
@@ -439,6 +439,7 @@ def onmessage(update,bot:ObigramClient):
             except:
                 bot.sendMessage(update.message.chat.id,'⚠Error en el comando /host moodlehost⚠')
             return
+            
         if '/repo' in msgText:
             try:
                 cmd = str(msgText).split(' ',2)
@@ -453,6 +454,7 @@ def onmessage(update,bot:ObigramClient):
             except:
                 bot.sendMessage(update.message.chat.id,'⚠Error en el comando /repo id⚠')
             return
+            
         if '/token_on' in msgText:
             try:
                 getUser = user_info
@@ -465,6 +467,7 @@ def onmessage(update,bot:ObigramClient):
             except:
                 bot.sendMessage(update.message.chat.id,'⚠Error en el comando /tokenize state❌')
             return
+            
         if '/token_off' in msgText:
             try:
                 getUser = user_info
@@ -477,6 +480,7 @@ def onmessage(update,bot:ObigramClient):
             except:
                 bot.sendMessage(update.message.chat.id,'⚠Error en el comando /tokenize state⚠')
             return
+            
         if '/cloud' in msgText:
             try:
                 cmd = str(msgText).split(' ',2)
@@ -491,6 +495,7 @@ def onmessage(update,bot:ObigramClient):
             except:
                 bot.sendMessage(update.message.chat.id,'⚠Error en el comando /cloud (moodle o cloud)⚠')
             return
+            
         if '/uptype' in msgText:
             try:
                 cmd = str(msgText).split(' ',2)
@@ -505,6 +510,7 @@ def onmessage(update,bot:ObigramClient):
             except:
                 bot.sendMessage(update.message.chat.id,'⚠Error en el comando /uptype (typo de subida (evidence,draft,blog,calendar,perfil))⚠')
             return
+            
         if '/proxy' in msgText:
             try:
                 cmd = str(msgText).split(' ',2)
@@ -522,6 +528,7 @@ def onmessage(update,bot:ObigramClient):
                     statInfo = infos.createStat(username,user_info,jdb.is_admin(username))
                     bot.sendMessage(update.message.chat.id,statInfo)
             return
+            
         if '/dir' in msgText:
             try:
                 cmd = str(msgText).split(' ',2)
@@ -536,6 +543,7 @@ def onmessage(update,bot:ObigramClient):
             except:
                 bot.sendMessage(update.message.chat.id,'⚠Error en el comando /dir folder⚠')
             return
+            
         if '/cancel_' in msgText:
             try:
                 cmd = str(msgText).split('_',2)
@@ -554,10 +562,10 @@ def onmessage(update,bot:ObigramClient):
 
         thread.store('msg',message)
 
-        if '/start' in msgText:
-            
-            msg = '🍜 Bot 1.3.5 en su version Ultra ha sido iniciado ⛩\n\n'
+        if '/start' in msgText:            
+            msg = start.start_i(username)
             bot.editMessageText(message,msg)
+            
         elif '/files' == msgText and user_info['cloudtype']=='moodle':
              proxy = ProxyCloud.parse(user_info['proxy'])
              client = MoodleClient(user_info['moodle_user'],
@@ -611,21 +619,6 @@ def onmessage(update,bot:ObigramClient):
             url = msgText
             ddl(update,bot,message,url,file_name='',thread=thread,jdb=jdb)
         else:
-            #if update:
-            #    api_id = os.environ.get('api_id')
-            #    api_hash = os.environ.get('api_hash')
-            #    bot_token = os.environ.get('bot_token')
-            #    
-                # set in debug
-            #    api_id = 7386053
-            #    api_hash = '78d1c032f3aa546ff5176d9ff0e7f341'
-            #    bot_token = '5124841893:AAH30p6ljtIzi2oPlaZwBmCfWQ1KelC6KUg'
-
-            #    chat_id = int(update.message.chat.id)
-            #    message_id = int(update.message.message_id)
-            #    import asyncio
-            #    asyncio.run(tlmedia.download_media(api_id,api_hash,bot_token,chat_id,message_id))
-            #    return
             bot.editMessageText(message,'⚠No se pudo analizar correctamente⚠')
     except Exception as ex:
            print(str(ex))
